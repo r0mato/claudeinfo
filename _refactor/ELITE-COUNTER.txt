@@ -1,0 +1,6 @@
+writeups_creados: 56
+skills_creadas: 6
+principios_mindset: 20
+por_clase: {idor:4, xss:9, ssrf:3, inyeccion:9, auth:17, info-disclosure:4, logica-negocio:2, race:4, protocolo:4}
+techo_contrato: 120 writeups / 6 skills
+estado: FASE 4 COMPLETA
