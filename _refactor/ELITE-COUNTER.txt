@@ -1,17 +1,13 @@
 writeups_creados: 96
-skills_creadas: 6
-principios_mindset: 20
+skills_creadas: 7   (techo elevado de 6 a 7 por decision del usuario: + waf-bypass-triage)
+principios_mindset: 30
+bypasses_cheatsheet: 64 entradas verificadas + 32 payloads de WAFFLED (seccion 11) = 96
+documentos_docs: 4  (CHEATSHEET-BYPASS, METHODOLOGY, MINDSET, SOURCES)
 por_clase: {inyeccion:28, auth:18, xss:11, protocolo:9, ssrf:7, cache:6, info-disclosure:6, idor:5, race:4, logica-negocio:2}
-confianza: {alta:56, media:40, baja:0}
+confianza_writeups: {alta:56, media:40, baja:0}
 cves_como_sujeto: 10
-  CVE-2025-32094 (Akamai), CVE-2024-21725 (Joomla), CVE-2024-21583 (GitPod),
-  CVE-2024-28233 (JupyterHub), CVE-2024-38472 y CVE-2024-39573 (Apache, los dos
-  unicos que Orange Tsai mapea explicitamente), CVE-2024-4367 (PDF.js),
-  CVE-2022-4037 (GitLab/Devise), CVE-2022-22720 (Apache), CVE-2022-23959 (Varnish)
-cves_solo_mencionados: 4
-  CVE-2024-38474, CVE-2024-38475, CVE-2024-38476 (encajan por descripcion pero la
-  fuente NO los mapea; declarado en cada writeup), CVE-2017-9841 (gadget de terceros)
-fuentes_consultadas: 34 documentos
-techo_contrato: 120 writeups / 6 skills
-margen_restante: 24 writeups
-estado: FASE 6 COMPLETA
+cves_nuevos_fase7: CVE-2025-27110 (libmodsecurity3 3.0.13->3.0.14), CVE-2022-39956, CVE-2022-39957 (OWASP CRS pre-3.3.3)
+fuentes_consultadas: 47 documentos
+techo_writeups: 200  (elevado de 120 por decision del usuario)
+margen_writeups: 104
+estado: FASE 7 COMPLETA (cheatsheet + metodologia + mindset 30 + skill 7)

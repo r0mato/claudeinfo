@@ -487,3 +487,278 @@ Queda registrado en `_refactor/ELITE-REJECTED.md`.
 | Inti De Ceukelaire | https://pentest-tools.com/blog/we-think-we-know-inti-de-ceukelaire | act. 2024-02-28 | transcripción de audio |
 | James Kettle | https://portswigger.net/research/smashing-the-state-machine | 2023-08-09 | investigación |
 | OWASP | SSRF Prevention Cheat Sheet | — | cheatsheet |
+
+---
+
+# AMPLIACIÓN (Fase 7) — principios 21 a 30
+
+**Fuentes nuevas de esta tanda:** Jason Haddix (*The Bug Hunter's Methodology* 4.002, DEF CON
+28 Safe Mode, Red Team Village, ago. 2020 — **transcripción ASR**, ver aviso) y NahamSec
+(Ben Sadeghipour, `nahamsec.com/posts`, texto publicado).
+
+⚠️ **Aviso de procedencia sobre Haddix.** Su material es una **transcripción automática de
+audio** con alta tasa de error en nombres propios, un hueco de audio real de 26,4 s, y frases
+cortadas por límites de subtítulo. Todas las citas de abajo están **recompuestas uniendo
+subtítulos consecutivos**. Los corchetes temporales son las marcas del fichero. **No citar
+palabra por palabra en público sin verificar contra el vídeo.**
+
+---
+
+## 21 — El recon es multiplicativo, no aditivo
+
+> "this idea of starting with seeds and then moving to subs really is going to multiply. The
+> more seeds you find the more subdomain enumeration you can do. The more subdomains you find
+> is related to how many sites you find. The more sites you find, the more successful you'll
+> be inside of your red team engagement or bug bounty program."
+> — **Jason Haddix** [24:11.210]
+
+**Por qué importa:** nombra la estructura, no la virtud. Una semilla extra no suma un activo:
+multiplica la rama entera que cuelga de ella. Eso cambia dónde conviene invertir esfuerzo —
+en las fases **tempranas** (adquisiciones, ASN, *reverse whois*), no en exprimir la última
+fase.
+
+**Aplicación:** si el inventario final es escaso, el problema casi nunca está en el
+fuerza-bruta de subdominios. Está en que faltan semillas.
+
+**Fuente:** `media.defcon.org/DEF CON 28/.../the bug hunters methodology-jason haddix.eng.txt`
+
+---
+
+## 22 — Antes de cualquier herramienta, un sistema de notas que permita soltar y retomar
+
+> "you have to have a way that jives with you to record your work. Otherwise, you're just
+> throwing darts and forgetting what you're doing."
+> — **Jason Haddix** [02:21.180]
+
+Y el criterio de diseño, que es lo específico [05:30.280]:
+
+> "everything in orange means I'm currently working on something, and everything in green...
+> I've already done... so I can easily put down a project and pick it back up if I want."
+
+**Por qué importa:** lo pone **primero**, antes de las decenas de herramientas de su charla. Y
+el requisito que impone no es "tomar notas": es que el sistema soporte **interrupción**. Un
+objetivo grande se trabaja en sesiones separadas por días, y lo que mata el progreso no es
+olvidar lo que encontraste sino olvidar **qué estabas probando**.
+
+**Aplicación:** es la razón de existir del campo `mata` de cada writeup de este repo y de
+`_refactor/ELITE-REJECTED.md`. Converge con el principio 15 (Inti De Ceukelaire): los
+escenarios que fallaron son inventario.
+
+---
+
+## 23 — Automatiza el bulk; reserva lo manual para atribución y priorización
+
+> "With every tool or method here in my methodology, I like to give you a manual way to do it
+> because context is important and getting used to the idea is important. And I like to give
+> you an automated way to do it in case you're going to script up your own recon framework."
+> — **Jason Haddix** [12:58.840]
+
+Los dos puntos donde **exige** verificación manual, citados:
+
+> "since you're using a keyword here to search, that you don't get other IP ranges that are not
+> your targets. You'll have to verify somewhat manually there." [13:58.860]
+
+> "you'll have to manually kind of verify these but the ones I would look at first are the ones
+> that actually have Uber in the domain somewhere." [21:01.860]
+
+**Por qué importa:** la frontera que traza no es "manual bueno, automático malo". Es que la
+automatización resuelve **recolección** y es incapaz de resolver **atribución de propiedad**.
+Un rango de IP que coincide con una palabra clave no es necesariamente del objetivo, y
+confundirlo significa atacar infraestructura ajena.
+
+**Aplicación:** automatiza lo que ya has hecho a mano y entiendes. Verifica a mano todo lo que
+decida **si un activo pertenece al alcance** — ahí un falso positivo no es ruido, es un
+problema de autorización.
+
+**Nota:** reconoce los límites de su propio script [01:03:05.000]: *"I write a horrible bash
+script to do my stuff. It works for me, but it could be better."*
+
+---
+
+## 24 — «Dejé el recon»: entender el negocio por encima de ampliar la superficie
+
+> "I was continuously relying too much on automation and recon, until I realized that most of
+> my bounties are coming from programs I spent extensive amounts of time understanding their
+> core business... It officially pushed me to shift my mindset from **finding bugs through
+> automation to looking at the core application** where they deploy new functionality every
+> quarter. **I quit recon** and it helped me figure out a new framework that has allowed me to
+> exceed my goals for this year."
+> — **NahamSec**
+
+El **subrayado es del propio autor** en el HTML original.
+
+**Por qué importa:** contradice frontalmente el principio 21. Las dos posturas vienen de
+hunters de primer nivel y **ninguna es un error**: responden a preguntas distintas. El recon
+amplio resuelve *«¿dónde hay superficie que nadie ha mirado?»*; esto resuelve *«¿por qué mis
+hallazgos son duplicados?»*.
+
+**Aplicación:** ver `docs/ELITE-METHODOLOGY.md` §1.3 para el criterio de decisión. El
+indicador que dice en qué régimen estás es el principio 25.
+
+**Fuente:** `nahamsec.com/posts/hacking-full-time`
+
+---
+
+## 25 — Los duplicados son un diagnóstico, no mala suerte
+
+> "When hundreds or thousands of hunters use identical tools and methodologies, they're all
+> discovering the same issues. It's like everyone following the same treasure map - the obvious
+> spots will be picked clean."
+> — **NahamSec**
+
+> "The bug bounty hunters who consistently succeed aren't the ones running the same tools as
+> everyone else. They're the ones who develop deep technical knowledge in specific areas."
+
+**Por qué importa:** convierte un resultado frustrante en **información accionable**. Un
+duplicado no dice que llegaste tarde: dice que recorriste la ruta estándar. Y la consecuencia
+es contraintuitiva — **más herramientas empeoran el problema**, porque son las mismas que usa
+todo el mundo.
+
+**Aplicación:** mide tu tasa de duplicados y trátala como la señal de pivote. Si es alta, el
+cuello de botella no es cobertura: es diferenciación. Converge con el principio 2 (rabhi:
+explorar los parámetros que nadie mira) y el 12 (Inti: los bugs críticos no están en las zonas
+más miradas).
+
+**Fuente:** `nahamsec.com/posts/why-bug-bounty-hunters-keep-finding-duplicates-and-how-to-stop`
+
+---
+
+## 26 — Caza donde ya eres usuario avanzado
+
+> "The most consistent hunters I know focus on programs where they're already power users...
+> if you use a platform every day, you understand all its features, quirks, and intended
+> behaviors. That knowledge becomes your advantage. If you're interested in a program you don't
+> currently use, that's fine, but you need to commit to becoming an expert. For example, if
+> you're going to hack on Airbnb, you should understand everything about being a host - how
+> listing management works, what automation features are available, how payments flow, every
+> single setting and option in a host's dashboard."
+> — **NahamSec**
+
+**Por qué importa:** da un criterio de selección **gratuito** y difícil de copiar. El
+conocimiento de producto no se automatiza ni se comparte en una wordlist, así que es la única
+ventaja que no se erosiona cuando mil personas usan tus herramientas.
+
+Y explica por qué la lógica de negocio sigue dando hallazgos tras años de escaneo: reconocer
+que un descuento sobrevive a vaciar la cesta exige saber cómo **debería** comportarse la
+tienda.
+
+**Aplicación:** antes de elegir programa, pregúntate de qué producto eres usuario real. Si no
+lo eres de ninguno, el principio 4 (Chackal) da el siguiente mejor criterio: superficie
+funcional amplia.
+
+---
+
+## 27 — Leer los reportes divulgados del programa es recon
+
+> "As a part of my recon, I typically like to look for known or disclosed vulnerabilities. I
+> took a quick glance at their Hacktivity and found the following:"
+> — **NahamSec**, en su writeup de Snapchat ($5.000, Jenkins)
+
+Y el razonamiento que lo acompaña, que es la parte buena:
+
+> "First reaction was to do a subdomain brute force, but who are we kidding.. These are
+> corp/cdn domains and more than likely most of the juicy sub domains would more than likely be
+> in a unique pattern."
+
+**Por qué importa:** la *hacktivity* de un programa dice **qué clases ya pagaron** y **qué
+partes de la aplicación tienen historial**. Es inteligencia sobre las prioridades del equipo
+defensor, publicada por el propio programa, y gratis.
+
+**Aplicación:** antes de la primera petición, leer los reportes divulgados. Converge con el
+principio 8 (Inti: preguntar al cliente dónde buscaría él, con 9 aciertos de 10) y con el 9
+(las ofertas de empleo señalan dónde falta personal). Los tres son la misma idea: **el objetivo
+publica dónde le duele**.
+
+---
+
+## 28 — Si el canal de confirmación está bloqueado, el negativo no significa nada
+
+> "And one critical tip: Stop using Burp Collaborator or Interact for SSRF testing. Companies
+> are blocking these services. If you're serious about SSRF in 2025, set up your own interact.sh
+> server. That's the difference between landing an SSRF bounty and missing out."
+> — **NahamSec**
+
+> "SSRF is a gold mine. 25% of my total bug bounty earnings last year came from SSRF alone—but
+> I'm not talking about basic localhost or metadata tricks."
+
+**Por qué importa:** es el principio más concreto de esta tanda y tiene **consecuencia directa
+sobre una skill de este repo**. `skills/ssrf-escalation/SKILL.md` empieza confirmando la salida
+con un host propio; si el dominio del colaborador estándar está en una lista de bloqueo, ese
+paso da un falso negativo y la skill entera se detiene en el peldaño 1.
+
+Generaliza más allá de SSRF: **un instrumento bloqueado produce un negativo indistinguible de
+«no vulnerable»**. Es el mismo fallo que escuchar solo HTTP cuando la SSRF por UNC de Apache
+habla SMB (`writeups/ssrf/apache-unc-ssrf-cve-2024-38472.md`).
+
+**Aplicación:** antes de concluir «no hay salida», verifica que tu **canal de observación**
+funciona contra ese objetivo. Infraestructura propia en lugar de dominios conocidos.
+
+---
+
+## 29 — Lo viejo es más vulnerable, y es buscable
+
+> "One tip here is that you don't just want to target a certain year. Like here I have 2019 but
+> you also want to check 2018 and 2017. In fact, the more stuff you find that goes back farther
+> in age, the more likely it is to be vulnerable and less likely to have a lot of security
+> assessment associated to it."
+> — **Jason Haddix** [22:02.010]
+
+**Por qué importa:** da un **eje de priorización ordenable** sobre un inventario grande, que es
+exactamente lo que falta cuando tienes miles de hosts y ninguna razón para empezar por uno. La
+antigüedad es un proxy medible de «cuánta revisión ha recibido esto».
+
+**Aplicación:** ordena los activos por antigüedad y empieza por el extremo viejo. Converge con
+el principio 7 (Inti: lo que existe por obligación y nadie quiere mantener) y con el 12 (los
+críticos no están en las zonas más miradas).
+
+---
+
+## 30 — Shadow IT en cloud: infraestructura que nadie cree que vas a encontrar
+
+> "A lot of people are putting shadow IT infrastructure and registering websites on a credit
+> card or just not paying attention or thinking that anybody will find their cloud
+> infrastructure because they've never published those domains anywhere other than internally.
+> And so you can find a lot of things for your target organization that are just sitting in the
+> cloud, pretty much unsecured. In fact, it's been a big part of my research lately is scanning
+> the cloud ranges and just finding wickedly undersecured stuff because people just don't think
+> you'll ever find it."
+> — **Jason Haddix** [44:29.300]
+
+**Por qué importa:** identifica una clase de activo cuyo **modelo de seguridad es la
+oscuridad**. No está mal configurado por descuido: está sin configurar porque quien lo levantó
+asumió que nadie lo encontraría. Eso predice no solo *dónde* buscar sino *qué* esperar.
+
+**Aplicación:** enumerar rangos de cloud además de DNS. Y la lección de modelo de amenaza que
+generaliza, y que el repo documenta en
+`writeups/info-disclosure/apache-documentroot-confusion-local-gadgets.md`: **hay que saber qué
+sirve tu servidor, no solo qué escribió tu equipo.** Los gadgets locales de `/usr/share` los
+instaló la distribución; la infraestructura en la sombra la levantó alguien con una tarjeta de
+crédito. Ninguna de las dos aparece en el inventario oficial.
+
+---
+
+## Corrección a una creencia extendida sobre Haddix
+
+Se le atribuye a menudo un **«modelo de madurez» de frameworks de recon**. **No existe.** Nunca
+usa el término. Presenta *tier lists* de builds de videojuego (C / B / A / S, con analogía
+explícita a Diablo) y las desautoriza **dos veces**:
+
+> "Let me put out a big disclaimer here. My tools that I use personally on all bug hunts are C
+> tier tools. And they work for what I want and they do. And they're great. So there's nothing
+> bad to say about a C tier tool." [01:05:53.560]
+
+> "Warning... I am scaling some tools and giving them grades. It's not serious. It's my rough
+> experience. My gut feel. All these tools are wonderful and I respect the authors of them so
+> darn much." [01:07:28.900]
+
+Y duda de su propio esquema: *"I wonder if I should even really have like an S tier and an A
+tier."*
+
+**Clasifica sus propias herramientas como C tier** y dice que le funcionan. Citarlo como un
+modelo de madurez invierte su mensaje: el suyo es que **la herramienta buena es la que te
+funciona**, no la que tiene más características.
+
+También se le atribuye un criterio de **cuándo abandonar un objetivo**. Tampoco existe:
+búsqueda insensible a mayúsculas de `give up|gave up|move on|abandon|not worth|waste|walk
+away|bail|dead end|stop looking|drop it` → **cero coincidencias**. Solo da criterios de parada
+de una **técnica** (*"spider fatigue"*, agotar lo que Google sabe), que no es lo mismo.

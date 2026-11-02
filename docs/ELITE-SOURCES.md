@@ -173,3 +173,49 @@ del lote; Bugcrowd redacta el nombre del tercer autor de TE.0.
 | #8 | OAuth Non-Happy Path to ATO (Oxrz) | Complementaría los 5 writeups de OAuth |
 
 Más `gotta-cache-em-all` de PortSwigger (preselección de 15), que refuerza `cache`.
+
+---
+# FASE 7 — fuentes del arsenal (cheatsheet, metodología, mindset)
+
+## Para el cheatsheet de bypasses
+
+| # | Documento | Tipo | Aporte |
+|---|---|---|---|
+| 29 | [WAFFLED (arXiv:2503.10846v4)](https://arxiv.org/abs/2503.10846) · CC BY 4.0 | Paper, ACSAC 2025 | 24 clases (TABLE IV/V/VI); configuración de los 5 WAFs *"as of July 2024"* |
+| 30 | [`github.com/sa-akhavani/waffled`](https://github.com/sa-akhavani/waffled) · MIT, HEAD `747f79d` | Repositorio | **32 bypasses byte-exactos** + 4 bases detectables (control negativo) + 5 gramáticas + HTTP-Normalizer |
+| 31 | [`wafrift-encoding`](https://docs.rs/crate/wafrift-encoding/latest) 0.3.1 | Código Rust | Taxonomía (42 técnicas) y, fuera del alcance pedido, **CVE-2025-27110**, **CVE-2022-39956/39957** |
+
+## Para la metodología y el mindset
+
+| # | Documento | Tipo | Fiabilidad |
+|---|---|---|---|
+| 32 | [Haddix, TBHM 4.002 — DEF CON 28 Safe Mode, Red Team Village](https://media.defcon.org/DEF%20CON%2028/) (ago. 2020) | **Transcripción ASR** | **Media** — alta tasa de error en nombres; hueco de audio de 26,4 s |
+| 33 | [NahamSec — 8 posts](https://www.nahamsec.com/posts) (2018-2025) | Texto del autor | **Alta** — `<pre>` con saltos reales, énfasis del autor preservado |
+| 34 | [hackcert.com — *Advanced Tactics*](https://hackcert.com/blog/bug-bounty-hunting) | Blog | ⚠️ **BAJA, NO ATRIBUIBLE** — ver abajo |
+| 35 | [Critical Thinking ep. 109 — *Creative Recon*](https://www.criticalthinkingpodcast.io/) (feb. 2025) | Notas de episodio | Media — audio, sin transcripción |
+
+## ⚠️ hackcert.com: por qué no se cita como autoridad
+
+Verificado en HTML crudo:
+- La página del artículo declara `author = "Zainab Tariq Abbasi"`, fecha **6 abr. 2026**.
+- El índice firma **las 10 entradas de su primera página** con `Rokibul Islam` y **la misma
+  fecha** (`25 may. 2026`). `Zainab` aparece **0 veces** en el índice.
+- `Showing 1-10 of 389 entries`.
+- **Atribución factual errónea:** asigna a Jack Cable el ATO de *Sign in with Apple*, que fue
+  de **Bhavuk Jain** ($100.000, abril-mayo 2020).
+
+389 artículos con metadatos idénticos apuntan a contenido generado en lote. **Las técnicas que
+lista son comprobables por separado; la autoría no.** Usado solo como inventario.
+
+## Fuentes del encargo que NO se pudieron usar
+
+| Fuente | Motivo |
+|---|---|
+| **X/Twitter** — los 12 hunters (@naglinagli, @rabhi_, @stokfredrik, @thedawgyg, @putsi, @NahamSec, @Jhaddix, @EdOverflow, @garethheyes, @albinowax, @fransrosen, @0xteknogeek, @rhynorater) | **`HTTP 402 Payment Required`** en los tres perfiles probados. La API de X está detrás de pago. **Inalcanzable, sin ruta alternativa.** |
+| **"Decepticon WAF Bypass skill"** | **No localizable.** Búsqueda extendida: ningún resultado menciona el nombre. |
+| **TBHM v5** | Sin fuente primaria. Lo citado es **4.002** (ago. 2020). |
+
+**Cobertura real de los 12 hunters:** 4 con cita verbatim en el repo (Haddix, NahamSec,
+Kettle con 11 papers, Frans Rosén con 5 writeups, Gareth Heyes con 2 investigaciones). 8 sin
+material citable: **no se les atribuye ningún principio.** Atribuir una frase a una persona
+real sin tenerla literal es la peor falta posible en un documento de mindset.

@@ -8,9 +8,11 @@ referencia defensiva y educativa: no contiene objetivos, credenciales ni infraes
 
 ```
 writeups/<clase>/<slug>.md    96 writeups, 10 clases, frontmatter de 12 campos
-skills/<nombre>/SKILL.md       6 árboles de decisión de triaje (≤200 líneas)
-docs/ELITE-MINDSET.md         20 principios de caza con fuente atribuible
-docs/ELITE-SOURCES.md         inventario de las 34 fuentes + backlog priorizado
+skills/<nombre>/SKILL.md       7 árboles de decisión de triaje (≤200 líneas)
+docs/ELITE-CHEATSHEET-BYPASS.md  96 bypasses: 64 verificados + 32 byte-exactos de WAFFLED
+docs/ELITE-METHODOLOGY.md     flujo combinado Recon/Ataque/Reporte/Decisión, con cita
+docs/ELITE-MINDSET.md         30 principios de caza con fuente atribuible
+docs/ELITE-SOURCES.md         inventario de las 47 fuentes + backlog priorizado
 _refactor/ELITE-REPORT.md     informe de construcción y decisiones de criterio
 _refactor/ELITE-REJECTED.md   40+ candidatos descartados, con el motivo
 ```
