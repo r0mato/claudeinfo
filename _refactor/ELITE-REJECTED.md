@@ -159,3 +159,47 @@ writeup en esta pasada. Queda listo para continuar.
   alternativa.
 - **Deserialización:** los dos objetos PHP serializados literales con sus métodos
   mágicos, y la detección por firma `rO0` / `ac ed`.
+
+---
+# FASE 6 — Top 10 Web Hacking Techniques of 2024
+
+## M — Discrepancias INTERNAS encontradas en las fuentes primarias
+
+Esto no son rechazos: son contradicciones dentro de los propios artículos, detectadas al
+extraer. Se registran porque un catálogo que las silencia propaga el error.
+
+| Fuente | Discrepancia |
+|---|---|
+| **Mizu, DOMPurify** | El bloque de código de la Fig. 55 y el **enlace de PoC en vivo del propio artículo no coinciden**: el bloque lleva un envoltorio extra `<desc><svg>` y usa `<title>`; el enlace usa `<style>` y no lleva envoltorio. Se reproducen **ambas** versiones sin elegir. |
+| **Snyk, cookie tossing** | Escribe el prefijo como **`__Host__`** (dos guiones bajos finales). El prefijo correcto de RFC 6265bis es **`__Host-`**, como lo escribe Houhou. Copiar la forma de Snyk produce una corrección que no corrige nada y lo parece. Declarado en el writeup. |
+| **Orange Tsai, Apache** | La prosa del caso Redmine dice que `default/config/` apunta a `/etc/redmine/default/`, pero su comando usa `/var/lib/redmine/config/`. No se elige lectura. |
+| **Bugcrowd, TE.0** | El tamaño de chunk `50` declara 80 bytes, pero el contenido entre el `50` y el `0` suma ~54 con CRLF. La fuente no lo explica, y además llama al bloque *"a payload similar to this one"*. |
+| **Bugcrowd, TE.0** | La fuente **redacta el nombre del tercer autor**, dejando solo el alias `@_medusa_1_`. |
+| **Orange Tsai, Apache** | La sección 3-1-2 está **redactada en el original** (`Overwrite Handler to ██████ ███████ ██████`), y el **noveno CVE del lote también**. No se reconstruyen. |
+
+## N — Ausencias y límites (Fase 6)
+
+| Hueco | Fuente | Qué se hizo |
+|---|---|---|
+| Mapeo CVE→primitiva en Apache | Orange Tsai | De los 9 CVEs del lote, la fuente solo mapea **dos** explícitamente a una sección: CVE-2024-38472 y CVE-2024-39573. Para el resto se declara en el campo `fuente` que el encaje es por descripción y **no** está mapeado por la fuente. No se asignaron CVEs por parecido. |
+| Versiones de corrección por CVE | Orange Tsai | Solo da una versión para todo el lote (2.4.60). Remite a `httpd.apache.org/security/vulnerabilities_24.html`, que **no se consultó**. |
+| PDF PoC completo | PDF.js | El post enlaza dos PDFs en `github.com/codean-labs/pocs` que **no se descargaron**. El objeto de fuente que muestra es un marcador. |
+| Payloads de DOMPurify Fig. 25, 29 y 47 | Mizu | **Solo imágenes.** No reconstruidos. |
+| Sonda de detección y respuestas de confirmación | TE.0 | La fuente **no publica ninguna**; las capturas son imágenes. El control negativo del writeup es enteramente derivado y se declara como tal. |
+| Payload de la vía Type-Map | Orange Tsai, CVE-2024-38472 | Describe el mecanismo (fichero `.var` con ruta UNC) sin dar el texto. No se invent��. |
+| Cabeceras de respuesta de la URL del ataque | ChatGPT WCD | La fuente muestra `Cf-Cache-Status: HIT` **sobre otra URL**, durante el descubrimiento. No da cabeceras para la URL del traversal. |
+| Remediación y respuesta del proveedor | ChatGPT WCD | La fuente **no da ninguna** de las dos para este fallo. |
+| Definición de TE.0 en una frase | TE.0 | La fuente **nunca la da**. Que el front-end parsee chunked y el back-end ignore TE es una lectura de su analogía con CL.0, declarada como tal en el writeup. |
+
+## O — Pendiente del Top 10 (material no extraído)
+
+Cuatro de los diez no se fetchearon en esta pasada:
+- **#2** SQL Injection Isn't Dead: Smuggling Queries at the Protocol Level (Paul Gerste,
+  DEF CON 32) — es un **PDF de diapositivas**, con el riesgo de binario ilegible ya visto
+  con el PDF de `splitting-the-email-atom`.
+- **#4** WorstFit: Hidden Transformers in Windows ANSI (Orange Tsai, splitline).
+- **#6** DoubleClickjacking (Paulos Yibelo) — abriría una clase nueva (clickjacking).
+- **#8** OAuth Non-Happy Path to ATO (Oxrz) — complementaría los 5 writeups de OAuth.
+
+Más `gotta-cache-em-all` de PortSwigger, que estaba en la preselección de 15 y refuerza
+la clase `cache`.

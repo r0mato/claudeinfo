@@ -125,3 +125,51 @@ writeups) y `listen-to-the-whispers` (ya usado, 2 writeups).
 | Fuente | Por qué |
 |---|---|
 | `portswigger.net/research/sso-wars-the-token-menace` | HTTP 404. El fallback `/web-security/saml` **también** 404. La clase SAML/SSO queda sin cubrir; no se rellenó de memoria. |
+
+---
+# FASE 6 — primarios del Top 10 Web Hacking Techniques of 2024
+
+Seis de los diez primarios, extraídos directamente. El ranking se usó como mapa en la
+Fase 5; esta fase lo ejecuta.
+
+| Top 10 | Documento | Autor / fecha | Writeups | CVEs |
+|---|---|---|---|---|
+| **#1** | [Confusion Attacks: Apache HTTP Server](https://blog.orange.tw/posts/2024-08-confusion-attacks-en/) | Orange Tsai, 2024-08-09 | 4 (`idor`, `protocolo`, `info-disclosure`, `ssrf`) | CVE-2024-38472, CVE-2024-39573 (los 2 que la fuente mapea) |
+| **#3** | [Unveiling TE.0 HTTP Request Smuggling](https://www.bugcrowd.com/blog/unveiling-te-0-http-request-smuggling-discovering-a-critical-vulnerability-in-thousands-of-google-cloud-websites/) | Arnolfo, Gregorio, @_medusa_1_, 2024-07-17 | 1 (`protocolo`) | — ($8.500) |
+| **#5** | [Exploring the DOMPurify library](https://mizu.re/post/exploring-the-dompurify-library-bypasses-and-fixes) | Mizu, 2024-11-17 | 1 (`xss`) | — |
+| **#7** | [CVE-2024-4367 en PDF.js](https://codeanlabs.com/blog/research/cve-2024-4367-arbitrary-js-execution-in-pdf-js/) | Thomas Rinsma, 2024-05-20 | 1 (`xss`) | CVE-2024-4367 |
+| **#9** | [ChatGPT ATO — Wildcard Web Cache Deception](https://nokline.github.io/bugbounty/2024/02/04/ChatGPT-ATO.html) | Harel / Nokline, 2024-02-04 | 1 (`cache`) | — ($6.500) |
+| **#10** | [Hijacking OAuth flows via Cookie Tossing](https://snyk.io/articles/hijacking-oauth-flows-via-cookie-tossing/) | Elliot Ward / Snyk, 2024-11-26 | 1 (`auth`) | CVE-2024-21583, CVE-2024-28233 |
+
+Fuente complementaria leída para el #10:
+[Cookie tossing attacks](https://www.thomashouhou.com/post/cookie-tossing-attacks)
+(Thomas Houhou, 2024-07-15, versión escrita de su charla en Area41). Solo los primeros
+39.402 de 61.222 caracteres llegaron verbatim.
+
+**Recompensas verificadas en esta fase:** $8.500 (Google Cloud), $6.500 (OpenAI).
+
+## Advertencia sobre la fiabilidad de las fuentes primarias
+
+Esta fase produjo un hallazgo que no es técnico: **las fuentes primarias se contradicen
+consigo mismas con frecuencia**. Seis casos documentados en
+`_refactor/ELITE-REJECTED.md` §M. Dos con consecuencias prácticas:
+
+1. **Snyk escribe `__Host__`** (dos guiones bajos finales) donde el prefijo correcto de
+   RFC 6265bis es **`__Host-`**. Aplicar su forma literal produce una corrección
+   inoperante con apariencia de aplicada.
+2. **El bloque de código de DOMPurify (Fig. 55) y el enlace de PoC en vivo del propio
+   artículo no coinciden.** Se conservan ambas versiones.
+
+Más dos redacciones en el original: Orange Tsai redacta su sección 3-1-2 y el noveno CVE
+del lote; Bugcrowd redacta el nombre del tercer autor de TE.0.
+
+## Pendiente del Top 10 (4 de 10)
+
+| # | Técnica | Nota |
+|---|---|---|
+| #2 | SQL Injection Isn't Dead (Paul Gerste, DEF CON 32) | PDF de diapositivas: riesgo de binario ilegible, ya visto con el PDF de `splitting-the-email-atom` |
+| #4 | WorstFit: Hidden Transformers in Windows ANSI (Orange Tsai, splitline) | — |
+| #6 | DoubleClickjacking (Paulos Yibelo) | Abriría una clase nueva |
+| #8 | OAuth Non-Happy Path to ATO (Oxrz) | Complementaría los 5 writeups de OAuth |
+
+Más `gotta-cache-em-all` de PortSwigger (preselección de 15), que refuerza `cache`.

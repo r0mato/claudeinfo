@@ -1,10 +1,17 @@
-writeups_creados: 83
+writeups_creados: 96
 skills_creadas: 6
 principios_mindset: 20
-por_clase: {auth:17, inyeccion:24, xss:9, protocolo:7, ssrf:6, cache:5, info-disclosure:5, idor:4, race:4, logica-negocio:2}
-confianza: {alta:47, media:36, baja:0}
-cves_documentados: 5  (CVE-2025-32094, CVE-2024-21725, CVE-2022-4037, CVE-2022-22720, CVE-2022-23959)
-fuentes_consultadas: 25 documentos
+por_clase: {inyeccion:28, auth:18, xss:11, protocolo:9, ssrf:7, cache:6, info-disclosure:6, idor:5, race:4, logica-negocio:2}
+confianza: {alta:56, media:40, baja:0}
+cves_como_sujeto: 10
+  CVE-2025-32094 (Akamai), CVE-2024-21725 (Joomla), CVE-2024-21583 (GitPod),
+  CVE-2024-28233 (JupyterHub), CVE-2024-38472 y CVE-2024-39573 (Apache, los dos
+  unicos que Orange Tsai mapea explicitamente), CVE-2024-4367 (PDF.js),
+  CVE-2022-4037 (GitLab/Devise), CVE-2022-22720 (Apache), CVE-2022-23959 (Varnish)
+cves_solo_mencionados: 4
+  CVE-2024-38474, CVE-2024-38475, CVE-2024-38476 (encajan por descripcion pero la
+  fuente NO los mapea; declarado en cada writeup), CVE-2017-9841 (gadget de terceros)
+fuentes_consultadas: 34 documentos
 techo_contrato: 120 writeups / 6 skills
-margen_restante: 37 writeups
-estado: FASE 5 COMPLETA
+margen_restante: 24 writeups
+estado: FASE 6 COMPLETA

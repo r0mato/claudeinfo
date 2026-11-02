@@ -6,17 +6,42 @@
 
 ## 1 — Resumen
 
-| Capa | Fase 1-4 | **Fase 5** | **Total** | Techo |
-|---|---|---|---|---|
-| Writeups | 56 | +27 | **83** | 120 |
-| Skills | 6 | — | **6** | 6 |
-| Principios de mindset | 20 | — | **20** | 10-15 (superado) |
-| Fuentes consultadas | 15 | +13 | **28 documentos** | — |
-| CVEs documentados | 3 | +2 | **5** | — |
+| Capa | F1-4 | F5 | **F6** | **Total** | Techo |
+|---|---|---|---|---|---|
+| Writeups | 56 | +27 | **+13** | **96** | 120 |
+| Skills | 6 | — | — | **6** | 6 |
+| Principios de mindset | 20 | — | — | **20** | 10-15 (superado) |
+| Fuentes consultadas | 15 | +13 | **+6** | **34 documentos** | — |
+| CVEs como sujeto | 3 | +2 | **+5** | **10** | — |
 
-**Validación: 83/83** con los 12 campos de frontmatter y YAML parseable · **0**
+**Validación: 96/96** con los 12 campos de frontmatter y YAML parseable · **0**
 placeholders prohibidos · **6/6** skills bajo el límite de 200 líneas · **6/6**
-referencias cruzadas `skill:` resueltas.
+referencias cruzadas `skill:` resueltas · **56 alta / 40 media / 0 baja**.
+
+## 1-bis — Fase 6: el Top 10 del sector
+
+La Fase 5 identificó el backlog priorizado consultando el **Top 10 Web Hacking Techniques
+of 2024** de PortSwigger como mapa. La Fase 6 lo ejecutó sobre seis de los diez primarios,
+incluido el **nº1** (Orange Tsai, Apache HTTP Server) y el **nº3** (TE.0 contra Google
+Cloud, de los mismos investigadores ya acreditados en el caso de GitLab de este repo).
+
+Rendimiento: 6 fuentes → **13 writeups y 5 CVEs nuevos como sujeto**. Confirma de nuevo la
+conclusión de la Fase 5: la investigación original rinde entre 5 y 10 veces más que una
+fuente docente bajo el criterio de objetivo identificable.
+
+**El hallazgo metodológico de esta fase** no es un payload sino un patrón: las fuentes
+primarias **se contradicen internamente**, y detectarlo es parte del trabajo.
+`ELITE-REJECTED.md` §M documenta seis casos, dos de ellos con consecuencias prácticas
+directas:
+
+- **Snyk escribe el prefijo de cookie como `__Host__`** (dos guiones bajos). El correcto es
+  `__Host-`. Copiar su forma produce una corrección que no corrige nada **y lo parece**.
+- **El bloque de código de DOMPurify y el PoC en vivo del propio artículo no coinciden.** Se
+  conservan ambas versiones sin elegir.
+
+Más la honestidad sobre lo que las fuentes no dan: de los 9 CVEs del lote de Apache, Orange
+Tsai solo mapea **dos** a una primitiva concreta. Los demás writeups de Apache declaran que
+el encaje es por descripción y **no** asignan el CVE.
 
 ## 2 — Writeups por clase
 
