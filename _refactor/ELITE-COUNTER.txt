@@ -1,6 +1,10 @@
-writeups_creados: 56
+writeups_creados: 83
 skills_creadas: 6
 principios_mindset: 20
-por_clase: {idor:4, xss:9, ssrf:3, inyeccion:9, auth:17, info-disclosure:4, logica-negocio:2, race:4, protocolo:4}
+por_clase: {auth:17, inyeccion:24, xss:9, protocolo:7, ssrf:6, cache:5, info-disclosure:5, idor:4, race:4, logica-negocio:2}
+confianza: {alta:47, media:36, baja:0}
+cves_documentados: 5  (CVE-2025-32094, CVE-2024-21725, CVE-2022-4037, CVE-2022-22720, CVE-2022-23959)
+fuentes_consultadas: 25 documentos
 techo_contrato: 120 writeups / 6 skills
-estado: FASE 4 COMPLETA
+margen_restante: 37 writeups
+estado: FASE 5 COMPLETA

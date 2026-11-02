@@ -130,3 +130,38 @@ Sin atacar ningún target. Solo lectura de research pública. Sin repos genéric
 - **Persistencia:** opción (A) — commit + `git push -u origin claude/quirky-feynman-s2jxet` + PR en **borrador**. No se toca `main`.
 - **Redacción H2:** aceptar writeup cuando el vendor está nombrado en prosa, sustituyendo el host literal cuando el artículo lo da. Rechazar si host redactado **y** vendor sin nombrar.
 - **`writeups/protocolo/`:** creada (9ª clase, coherente con el enum de frontmatter).
+
+---
+## FASE 5 — EXTENSION (2026-11-02, a peticion del usuario: "lo mejor de lo mejor")
+
+Objetivo: cubrir los huecos del ELITE-REPORT §8 y agotar la cantera Tier 1 que no se
+toco en la primera pasada. Techo del contrato intacto: 120 writeups.
+
+**Punto de partida:** 56 writeups. Margen: 64.
+
+**Hueco 1 — SSTI (clase muerta).** OWASP tenia cero payloads. Fuente sustituta:
+el paper original de Kettle + la pagina de la Academy.
+
+**Hueco 2 — la cantera no explorada.** La primera pasada uso 4 papers de
+PortSwigger Research; hay decenas. Lote 1 lanzado: SSTI, prototype pollution,
+cache poisoning (x2 papers), browser-powered desync, timing attacks, GraphQL+NoSQL.
+
+**Carpeta nueva:** `writeups/cache/` — envenenamiento y engaño de caché. Precedente:
+el usuario ya aprobo añadir `protocolo/` por el mismo motivo (material Tier 1 abundante
+que no encaja en las 8 originales). Se declara aqui, no se pide OK de nuevo.
+
+**Clases a reforzar y de donde:**
+| Clase | Antes | Fuente nueva |
+|---|---|---|
+| `inyeccion` | 9 | SSTI, prototype pollution, GraphQL, NoSQL, deserializacion, XXE |
+| `cache` | 0 | practical-web-cache-poisoning, web-cache-entanglement |
+| `protocolo` | 4 | browser-powered-desync (CSD, CL.0, pause-based) |
+| `info-disclosure` | 4 | timing attacks (whispers) |
+| `ssrf` | 3 | scoped SSRF por timing; cracking-the-lens (host header) |
+| `auth` | 17 | SAML / SSO |
+
+**Lo que sigue sin cubrirse y por que:** `idor` y `logica-negocio` necesitan reportes
+divulgados de HackerOne con ID verificable. Es la via identificada en el informe y la
+mas costosa de recolectar: cada reporte da un writeup, frente a los 6-8 que rinde un
+paper de investigacion. Se intentara al final, cuando las fuentes de alto rendimiento
+esten agotadas.

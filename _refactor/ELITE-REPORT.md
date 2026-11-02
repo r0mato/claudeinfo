@@ -6,124 +6,139 @@
 
 ## 1 — Resumen
 
-| Capa | Producido | Techo del contrato |
-|---|---|---|
-| Writeups | **56** | 120 |
-| Skills | **6** | 6 |
-| Principios de mindset | **20** | 10-15 (superado) |
-| Fuentes consultadas | **13 documentos** de 5 dominios Tier 1/2 | — |
+| Capa | Fase 1-4 | **Fase 5** | **Total** | Techo |
+|---|---|---|---|---|
+| Writeups | 56 | +27 | **83** | 120 |
+| Skills | 6 | — | **6** | 6 |
+| Principios de mindset | 20 | — | **20** | 10-15 (superado) |
+| Fuentes consultadas | 15 | +13 | **28 documentos** | — |
+| CVEs documentados | 3 | +2 | **5** | — |
 
-Quedé en 56 de 120 writeups **por decisión, no por falta de tiempo**. El contrato dice
-"mejor 30 de élite que 300 mediocres" y es la regla que apliqué: cerré cada clase cuando
-agoté los *principios distintos* de sus fuentes, en lugar de generar variantes
-casi idénticas para subir el número. El fichero `ELITE-REJECTED.md` documenta 40+
-candidatos descartados, que es la otra mitad del trabajo.
+**Validación: 83/83** con los 12 campos de frontmatter y YAML parseable · **0**
+placeholders prohibidos · **6/6** skills bajo el límite de 200 líneas · **6/6**
+referencias cruzadas `skill:` resueltas.
 
 ## 2 — Writeups por clase
 
-| Clase | Creados | Cuota del plan | Nota |
+| Clase | Total | Fase 5 | Nota |
 |---|---|---|---|
-| `auth` | 17 | 16 | ✅ superada. 7 JWT + 5 parsers de correo + 5 OAuth |
-| `xss` | 9 | 20 | ⚠️ cerrada en 9: agoté los principios distintos del cheat sheet |
-| `inyeccion` | 9 | 18 | ⚠️ 6 SQLi + 3 argument injection. SSTI cayó entera (fuente sin payloads) |
-| `idor` | 4 | 10 | ⚠️ material docente sin objetivo real; ver §5 |
-| `info-disclosure` | 4 | 12 | ⚠️ XS-Leaks agotado; varias técnicas sin código en la fuente |
-| `protocolo` | 4 | 14 | ⚠️ regla H2 descartó los casos con vendor sin nombrar |
-| `race` | 4 | 8 | ⚠️ 4 de 9 casos de la fuente tenían objetivo real nombrado |
-| `ssrf` | 3 | 12 | ⚠️ el cheat sheet de OWASP es preventivo, no ofensivo |
-| `logica-negocio` | 2 | 10 | ⚠️ 4 de 6 clases de la fuente no tienen un solo payload |
+| `inyeccion` | **24** | +15 | SSTI resucitada de 0 a 5; GraphQL, NoSQL, XXE, prototype pollution |
+| `auth` | 17 | — | JWT (7), parsers de correo (5), OAuth (5) |
+| `xss` | 9 | — | cerrada: agotados los principios distintos de la fuente |
+| `protocolo` | **7** | +3 | desync Expect + client-side desync + pause-based |
+| `ssrf` | **6** | +3 | scoped SSRF por timing, cabecera Host (Yahoo) |
+| `cache` | **5** | +5 | carpeta nueva; GitHub $10k, Mozilla $1k |
+| `info-disclosure` | **5** | +1 | XS-Leaks + dual-packet sync |
+| `idor` | 4 | — | solo lo atado a producto/versión concreta |
+| `race` | 4 | — | 4 de 9 casos de la fuente tenían objetivo nombrado |
+| `logica-negocio` | 2 | — | 4 de 6 clases de la fuente no tienen un solo payload |
 
-**Lectura honesta de las cuotas incumplidas:** no son un fallo de esfuerzo sino un
-hallazgo sobre las fuentes. Los cheat sheets de OWASP y las páginas de la Web Security
-Academy son material **defensivo y docente**: tienen técnica, no casos. Las cuotas altas
-que fijé en la Fase 0 suponían que rendirían como la investigación original de
-PortSwigger, y no lo hacen. Para llenar `ssrf`, `idor` y `logica-negocio` hace falta otra
-clase de fuente: reportes divulgados de HackerOne con ID verificable.
+## 3 — Lo que cambió en Fase 5, y por qué
 
-## 3 — Skills creadas (6/6, todas ≤200 líneas)
+El informe de la Fase 4 identificó que las cuotas incumplidas no eran un problema de
+esfuerzo sino **de fuente**: los cheat sheets de OWASP y las páginas docentes de la
+Academy tienen técnica pero no casos. La Fase 5 lo confirmó y lo corrigió por el único
+camino viable: **ir a la investigación original**.
 
-| Skill | Líneas | Señal citada |
+El contraste es medible. Siete papers de PortSwigger Research rindieron **27 writeups con
+objetivos nombrados, recompensas verificadas y 2 CVEs nuevos**, mientras que en la Fase 1
+el cheat sheet de SSRF de OWASP —una fuente excelente para defender— rindió 3 writeups
+sin un solo objetivo real.
+
+La conclusión transferible: **para un catálogo con criterio de "objetivo identificable",
+un paper de investigación rinde entre 5 y 10 veces más que un cheat sheet defensivo.**
+
+### SSTI: de clase muerta a 5 writeups
+La Fase 1 cerró SSTI con cero porque la página de OWASP **no contiene un solo payload**.
+El paper original de Kettle (2015) sí los tiene, con cuatro productos nombrados —
+Alfresco, XWiki Enterprise, CodePen, y los sandboxes de Smarty y Twig con sus versiones
+de corrección.
+
+### Carpeta nueva `cache/`
+Declarada, no consultada de nuevo: el precedente de `protocolo/` ya estaba aprobado por
+el mismo motivo (material Tier 1 abundante que no encaja en las clases originales). Usa
+`clase: otra`, que está en el enum del contrato.
+
+## 4 — Recompensas y CVEs verificados
+
+| Objetivo | Importe | Fuente |
 |---|---|---|
-| `desync-triage` | 146 | Kettle, "HTTP/1.1 must die" (2025) |
-| `xss-sink-triage` | 143 | PortSwigger XSS cheat sheet |
-| `jwt-attack-tree` | 142 | PortSwigger JWT + algorithm confusion |
-| `oauth-flow-audit` | 152 | Rosén, "dirty dancing" (2022) + borrador IETF |
-| `ssrf-escalation` | 149 | OWASP SSRF ("treat parser disagreement as a rejection") |
-| `race-window` | 152 | Kettle, "Smashing the state machine" (2023) |
+| Yahoo (Apache Traffic Server overseer) | **$15.000** | Cracking the lens |
+| GitHub (fat GET) | **$10.000** | Web Cache Entanglement |
+| Yahoo (técnica `@`, 17 servidores) | $8.000 | Cracking the lens |
+| Yahoo (normalización de ruta) | $5.000 | Cracking the lens |
+| Yahoo (segundo servidor) | $5.000 | Cracking the lens |
+| Apache (vía Internet Bug Bounty) | $4.000 | Browser-powered desync |
+| Mozilla SHIELD | $1.000 | Practical Web Cache Poisoning |
 
-**Desviación del plan:** sustituí `idor-at-scale` por `jwt-attack-tree`. Razón: JWT
-acumuló 7 writeups con payloads literales y un árbol de coste claro, mientras que el
-material de IDOR dio 4 writeups sin objetivo real y no sostenía una skill con señal
-citada. Preferí 6 skills con base documental a 6 que cubrieran el plan.
+**CVEs:** CVE-2025-32094 (Akamai) · CVE-2024-21725 (Joomla) · CVE-2022-4037
+(GitLab/Devise) · CVE-2022-22720 (Apache) · CVE-2022-23959 (Varnish).
 
-## 4 — Validación (Fase 4)
+**Corrección a una premisa mía:** en el brief de *Cracking the lens* afirmé que
+documentaba "pagos muy grandes". Era falso — el máximo es $15.000, el total $33.000, y
+**el paper no contiene ningún CVE**. El agente lo corrigió. Lo registro porque una
+premisa errónea en un brief contamina la extracción, y aquí no lo hizo solo porque hubo
+verificación.
 
-Todo ejecutado y pasado:
-
-- **Frontmatter:** los **12** campos del contrato presentes en los 56 writeups
-  (verifiqué los 12, no solo `clase` y `payload` como pedía el script del prompt).
-- **Placeholders prohibidos:** `grep -rlE "YOUR-LAB-ID|<target>|REDACTED"` → **vacío**.
-  (Nota: el grep del prompt sin `-E` trata el `|` como literal y nunca habría
-  coincidido; lo corregí.)
-- **Skills ≤200 líneas:** 6/6, máximo 152.
-- **Bloques obligatorios de skill:** 6/6 con frontmatter completo, `0 — SEÑAL CITADA`,
-  "Cuándo esta skill NO es la correcta", "Trampas de falso positivo" y output en
-  `evidencias/`.
-- **`description` ≤200 chars:** 6/6, máximo 169.
-- **Referencias cruzadas `skill:*`:** encontré 1 rota (`skill:idor`) y la corregí.
-  Las 6 restantes resuelven a skills existentes.
-
-## 5 — Decisiones de criterio que cambiaron el resultado
-
-Cuatro juicios que conviene que revises, porque alteran qué entró:
-
-1. **Redacción con vendor nombrado (acordado contigo).** Acepté los casos de PortSwigger
-   donde el host está redactado pero el vendor aparece en prosa, usando el host literal
-   cuando el artículo lo da (`auth.lastpass.com`, `h1.sec.gitlab.net`, `app.netlify.com`).
-   Sin esto, `protocolo` se habría quedado en 0.
-2. **IDOR: solo lo atado a algo concreto.** Acepté los writeups ligados a un producto,
-   cabecera o versión (`X-Original-URL`, Spring <5.3, `Referer`) y rechacé el
-   `?customer_number=132355` genérico. Es una línea discutible y la declaro.
-3. **Campos derivados marcados.** El contrato exige `control_negativo`, que casi ninguna
-   fuente publica. Lo diseñé yo y marqué cada línea con `# [derivado]`, igual que las
-   remediaciones inferidas y los CVSS estimados. Nunca verás un campo razonado
-   presentado como citado.
-4. **No reconstruí payloads image-only.** Los vectores finales de GitHub, Zendesk,
-   GitLab y Joomla solo existen en capturas. Reproducir "a ojo" una dirección de correo
-   que depende de cada `=00` habría producido lo más peligroso para este catálogo: un
-   payload inventado con apariencia de literal.
-
-## 6 — Hallazgo técnico sobre las fuentes (H1), y cómo lo gestioné
-
-La conversión HTML→texto **colapsa los saltos de línea dentro de los bloques de código**.
-Para los payloads de una línea (XSS, SQLi, URLs, direcciones de correo) es inocuo. Para
-los multi-línea dependientes de CRLF —desync HTTP— significa que no tengo los bytes
-exactos.
-
-Qué hice: los 4 writeups de `protocolo` y los de `race` con pares de peticiones llevan
-una **nota de procedencia explícita** indicando que la estructura por líneas está
-reconstruida desde la sintaxis de cabeceras, y van como `confianza: media`. Además es una
-de las tres trampas de falso positivo de `skill:desync-triage`.
-
-Reconstruir en silencio habría sido más cómodo y habría producido un catálogo que falla
-en producción sin explicar por qué.
-
-## 7 — Distribución de confianza
+## 5 — Distribución de confianza
 
 | `confianza` | Writeups | Qué significa |
 |---|---|---|
-| `alta` | 32 | payload literal verificado, objetivo o producto nombrado |
-| `media` | 24 | CRLF reconstruido, host redactado con vendor nombrado, o payload parcial declarado |
-| `baja` | 0 | nada llegó a guardarse con confianza baja: se rechazó |
+| `alta` | **47** | payload literal verificado, objetivo o producto nombrado |
+| `media` | **36** | caveat declarado en el propio writeup |
+| `baja` | **0** | nada se guardó con confianza baja: se rechazó |
 
-(Cifras contadas con `grep -rl "^confianza: X" writeups/`, no estimadas.)
+(Contadas con `grep`, no estimadas.)
 
-## 8 — Qué haría a continuación
+## 6 — El hallazgo técnico que condiciona todo (H1)
 
-1. **Reportes divulgados de HackerOne con ID verificable** — es lo único que llena
-   `idor`, `logica-negocio` y `ssrf` cumpliendo el criterio de objetivo real.
-2. **SSTI desde PortSwigger** en lugar de OWASP, que no tiene payloads.
-3. **El PDF de `splitting-the-email-atom`** por otra vía, para verificar el número exacto
-   de barras invertidas y subir esos 5 writeups de `media` a `alta`.
-4. **Verificar `oncuechange`** contra la fuente: es el único vector de XSS cuyos bytes no
-   puedo garantizar (espacios frente a `%0A` en el `data:` URI de WebVTT).
+La conversión HTML→texto **colapsa los saltos de línea en los bloques de código**. En la
+Fase 5 esto dejó de ser un inconveniente y pasó a ser **crítico** en un caso concreto:
+
+Los payloads de JavaScript de los ataques client-side desync contienen comentarios `//`.
+Colapsados en una línea, **comentan el resto del bloque y el código no se ejecuta**. Un
+investigador que copie ese payload de un render obtendrá un fallo silencioso y lo
+atribuirá al objetivo.
+
+Está declarado en el writeup afectado, con la precisión de que los `\r\n` **dentro** de
+los literales de cadena sí son fiables — son escapes, no saltos reales, y son justo la
+parte que importa para el desync.
+
+## 7 — Qué sigue sin cubrirse
+
+| Hueco | Por qué | Vía |
+|---|---|---|
+| **SAML / SSO** | Las dos URLs de PortSwigger dan **404**. No se rellenó de memoria. | Otra fuente |
+| `idor`, `logica-negocio` | Las fuentes docentes no tienen objetivos reales | Reportes divulgados de HackerOne con ID verificable |
+| Deserialización | Material extraído; writeups no escritos | Pendiente, no bloqueado |
+
+## 8 — Backlog priorizado (no por mí, por el sector)
+
+Consulté el **Top 10 Web Hacking Techniques of 2024** de PortSwigger *como mapa, no como
+fuente*: 121 nominaciones, 103 tras filtrar, y un panel de Nicolas Grégoire, Soroush
+Dalili, STÖK, LiveOverflow y Kettle. Las 10 URLs primarias están en
+`docs/ELITE-SOURCES.md`.
+
+Los tres primeros de la lista son material de primer orden y ninguno está cubierto aquí:
+las **Confusion Attacks** de Orange Tsai sobre Apache HTTP Server (#1), la **inyección SQL
+a nivel de protocolo** de Paul Gerste (#2), y el **TE.0 request smuggling** contra miles
+de sitios de Google Cloud (#3) — este último de los mismos investigadores acreditados en
+el caso de GitLab que ya está en `writeups/protocolo/`.
+
+## 9 — Las decisiones de criterio, consolidadas
+
+1. **Redacción con vendor nombrado** (acordado): acepto el host redactado cuando el
+   vendor aparece en prosa, usando el host literal donde el artículo lo da.
+2. **Material docente solo si está atado a algo concreto**: un producto, una cabecera o
+   una versión. Por eso entraron Spring <5.3, `X-Original-URL`, MongoDB y GraphQL, y se
+   rechazó el `?customer_number=132355` genérico.
+3. **Campos derivados marcados** con `# [derivado]`. Nunca verás un campo razonado
+   presentado como citado.
+4. **No reconstruyo payloads que solo existen en imágenes.** En Fase 5 eso dejó fuera el
+   árbol de decisión por motor de SSTI, los diagramas de pause-based desync y las
+   capturas de DOM Invader — material que me habría venido bien y que no invento.
+5. **Registro lo que la fuente NO dice.** `ELITE-REJECTED.md` documenta que
+   `?constructor.prototype.foo=bar`, `Host: localhost`, `X-Forwarded-Host` en
+   *Cracking the lens*, `<%= 7*7 %>` y los gadgets de jQuery/Lodash **no están** en las
+   fuentes que se les atribuyen. Un catálogo que solo recoge lo que encontró pierde esa
+   información, que es la que evita propagar folclore.

@@ -65,3 +65,63 @@ ningún sistema de terceros. Todo el contenido proviene de investigación public
 propias fuentes declaran su autorización — PortSwigger: *"All case-studies were
 identified through authorized testing on targets with vulnerability disclosure programs
 (VDPs)."*
+
+---
+# FASE 5 — fuentes adicionales (2026-11-02)
+
+## Tier 1 — Investigación original (nuevas)
+
+| # | Documento | Autor / fecha | Writeups |
+|---|---|---|---|
+| 16 | [Server-Side Template Injection](https://portswigger.net/research/server-side-template-injection) | James Kettle, 2015-08-05 (act. 2025-09-03) | 5 (`inyeccion`) |
+| 17 | [Practical Web Cache Poisoning](https://portswigger.net/research/practical-web-cache-poisoning) | James Kettle, 2018-08-09 | 2 (`cache`) |
+| 18 | [Web Cache Entanglement](https://portswigger.net/research/web-cache-entanglement) | James Kettle, 2020-08-05 | 3 (`cache`) |
+| 19 | [Browser-Powered Desync Attacks](https://portswigger.net/research/browser-powered-desync-attacks) | James Kettle, 2022-08-10 | 3 (`protocolo`) |
+| 20 | [Listen to the whispers: web timing attacks that actually work](https://portswigger.net/research/listen-to-the-whispers-web-timing-attacks-that-actually-work) | James Kettle, 2024-08-07 | 2 (`ssrf`, `info-disclosure`) |
+| 21 | [Cracking the lens](https://portswigger.net/research/cracking-the-lens-targeting-https-hidden-attack-surface) | James Kettle, 2017-07-27 | 2 (`ssrf`) |
+| 22 | [Widespread prototype pollution gadgets](https://portswigger.net/research/widespread-prototype-pollution-gadgets) | Gareth Heyes, 2022-06-22 | 2 (`inyeccion`) |
+
+**CVEs añadidos:** CVE-2022-23959 (Varnish), CVE-2022-22720 (Apache).
+**Recompensas verificadas:** $15.000 + $8.000 + $5.000 + $5.000 (Yahoo, total $33.000),
+$10.000 (GitHub), $4.000 (Apache vía Internet Bug Bounty), $1.000 (Mozilla).
+
+## Tier 2 — Academy (nuevas)
+
+| # | Documento | Writeups |
+|---|---|---|
+| 23 | [GraphQL API vulnerabilities](https://portswigger.net/web-security/graphql) | 3 (`inyeccion`) |
+| 24 | [NoSQL injection](https://portswigger.net/web-security/nosql-injection) | 2 (`inyeccion`) |
+| 25 | [XXE](https://portswigger.net/web-security/xxe) + [blind XXE](https://portswigger.net/web-security/xxe/blind) | 2 (`inyeccion`) |
+| 26 | [Prototype pollution](https://portswigger.net/web-security/prototype-pollution) (+ client-side, server-side, preventing) | 1 (`inyeccion`) |
+| 27 | [Deserialization](https://portswigger.net/web-security/deserialization) + exploiting | 0 — material extraído, writeup pendiente |
+| 28 | [SSTI](https://portswigger.net/web-security/server-side-template-injection) | contribuye a los 5 de SSTI |
+
+## Mapa de prioridades para continuar
+
+Se consultó [Top 10 Web Hacking Techniques of 2024](https://portswigger.net/research/top-10-web-hacking-techniques-of-2024)
+(James Kettle, 2025-02-04; 121 nominaciones, 103 tras filtrar, panel de Nicolas Grégoire,
+Soroush Dalili, STÖK, LiveOverflow y Kettle) **como mapa, no como fuente**. Es el
+backlog priorizado por el propio sector:
+
+| # | Técnica | Autor | Fuente primaria |
+|---|---|---|---|
+| 1 | Confusion Attacks: Apache HTTP Server | Orange Tsai | https://blog.orange.tw/posts/2024-08-confusion-attacks-en/ |
+| 2 | SQL Injection Isn't Dead: Smuggling Queries at the Protocol Level | Paul Gerste | https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn%27t%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf |
+| 3 | Unveiling TE.0 HTTP Request Smuggling (Google Cloud) | Arnolfo, Gregorio, @_medusa_1_ | https://www.bugcrowd.com/blog/unveiling-te-0-http-request-smuggling-discovering-a-critical-vulnerability-in-thousands-of-google-cloud-websites/ |
+| 4 | WorstFit: Hidden Transformers in Windows ANSI | Orange Tsai, splitline | https://blog.orange.tw/posts/2025-01-worstfit-unveiling-hidden-transformers-in-windows-ansi/ |
+| 5 | Exploring the DOMPurify library: Bypasses and Fixes | Mizu | https://mizu.re/post/exploring-the-dompurify-library-bypasses-and-fixes |
+| 6 | DoubleClickjacking | Paulos Yibelo | https://www.paulosyibelo.com/2024/12/doubleclickjacking-what.html |
+| 7 | CVE-2024-4367 — JS arbitrario en PDF.js | Thomas Rinsma | https://codeanlabs.com/blog/research/cve-2024-4367-arbitrary-js-execution-in-pdf-js/ |
+| 8 | OAuth Non-Happy Path to ATO | Oxrz | https://blog.voorivex.team/oauth-non-happy-path-to-ato |
+| 9 | ChatGPT ATO — Wildcard Web Cache Deception | Harel | https://nokline.github.io/bugbounty/2024/02/04/ChatGPT-ATO.html |
+| 10 | Hijacking OAuth flows via Cookie Tossing | Elliot Ward | https://snyk.io/articles/hijacking-oauth-flows-via-cookie-tossing/ |
+
+Nota: PortSwigger excluye su propia investigación del voto. Los tres suyos que estaban en
+la preselección de 15 son `gotta-cache-em-all`, `splitting-the-email-atom` (ya usado, 5
+writeups) y `listen-to-the-whispers` (ya usado, 2 writeups).
+
+## Fuente que falló en Fase 5
+
+| Fuente | Por qué |
+|---|---|
+| `portswigger.net/research/sso-wars-the-token-menace` | HTTP 404. El fallback `/web-security/saml` **también** 404. La clase SAML/SSO queda sin cubrir; no se rellenó de memoria. |

@@ -93,3 +93,69 @@ propia fuente (PortSwigger) en plantillas de técnica que se instancian con un v
 obtenido en el paso anterior. No coinciden con el grep del contrato
 (`YOUR-LAB-ID|<target>|REDACTED`), y en cada writeup se acompañan de una **instanciación
 concreta** para que sean ejecutables tal cual. Decisión declarada, no omisión.
+
+---
+# FASE 5 — rechazados y fallos de acceso adicionales
+
+## H — Fallos de acceso (Fase 5)
+
+| Recurso | Resultado |
+|---|---|
+| `portswigger.net/research/sso-wars-the-token-menace` | **HTTP 404**. Fallo permanente. |
+| `portswigger.net/web-security/saml` (fallback) | **HTTP 404** también. Consecuencia: **la clase SAML/SSO quedó sin cubrir**. No se rellenó de memoria: ni XSW, ni exclusión de firma, ni la truncación por comentario XML en el `NameID`, ni confusión de audiencia. Hace falta otra fuente. |
+
+## I — Ausencias de la fuente (Fase 5)
+
+| Hueco | Fuente | Qué se hizo |
+|---|---|---|
+| Payloads serializados de **Java, Ruby y Python** | PortSwigger deserialization | Solo hay dos cadenas PHP literales y la firma `ac ed` / `rO0`. La forma `ac ed 00 05`, `__toString`, ysoserial.net y gadgetinspector **no están**. No se inventó ninguna. |
+| **Cadena de gadgets** completa | PortSwigger deserialization | No hay ningún payload de cadena. Solo el comando de ysoserial con placeholders `[payload]` y `'[command]'`, que son texto de la propia página. |
+| Payload **PHAR** | PortSwigger deserialization | Se describe el wrapper `phar://`, sin payload. |
+| Payload de **subida SVG/DOCX** para XXE | PortSwigger XXE | La página los nombra como superficie de ataque y no da payload. |
+| `?constructor.prototype.foo=bar` y `{"constructor": ...}` | Prototype pollution (4 páginas) | **No aparecen en ninguna.** La fuente da la ruta del constructor solo como expresiones JS. Circulan como payloads de esta clase; no son de PortSwigger. |
+| **jQuery, Lodash, Vue, Chart.js, Wistia** como gadgets | Prototype pollution | No aparecen en ninguna de las cuatro páginas. `ppmap` tampoco. |
+| `Host: localhost`, `X-Forwarded-Host`, "Host override via line wrapping" | Cracking the lens | **Ninguno está en el paper.** Los tres circulan atribuidos a este trabajo. Se declara en el writeup. |
+| `Fastly-SSL`, `X-Forwarded-Port` | Ambos papers de caché | No aparecen en ninguno de los dos. |
+| `<%= 7*7 %>` y `#{7*7}` | SSTI (paper + Academy) | No están. Solo `<%=foobar%>` (ERB) y `#{prop}` (Jade). |
+| Sondas SSTI de **Velocity, Mako, Handlebars, Django, Tornado, Flask, Pug** | SSTI | Sin sonda documentada. No se inventaron. |
+| Extracción por error en **Oracle** (SQLi) | SQLi cheat sheet | Ausente de esa sección, ya registrado en Fase 1. |
+
+## J — Corrección de una premisa mía
+
+En el brief de *Cracking the lens* afirmé que el paper documentaba "pagos muy grandes".
+**Era falso y el agente lo corrigió**: el máximo es **$15.000** y el total declarado
+*"a healthy $33,000"*, repartido en cuatro hallazgos de Yahoo. Y el paper **no contiene
+ningún CVE**. Se registra porque una premisa errónea en un brief es una forma de
+contaminar la extracción, y aquí no lo hizo solo porque el agente verificó.
+
+## K — Contenido solo en imágenes (Fase 5, no reconstruido)
+
+- **SSTI:** los dos diagramas de metodología y, crucialmente, **el árbol de decisión por
+  motor** de la Academy — que es justo donde viven las ramas de identificación por motor.
+- **Cache poisoning:** los diagramas de metodología de ambos papers, la salida de
+  `/cdn-cgi/trace`, y la petición que fija la sobrescritura de query en el caso de Drupal.
+- **Pause-based desync:** todos los diagramas de secuencia (Varnish, Apache, ALB).
+- **Timing attacks:** la ecuación señal/ruido (`article-equation.png`), los diagramas de
+  división temporal y de caché DNS, y la captura de Collaborator.
+- **Prototype pollution:** las cuatro capturas de DOM Invader que muestran los sinks de
+  Google Analytics, GTM y Adobe.
+
+## L — Material disponible y NO escrito (pendiente, no rechazado)
+
+Esto no son rechazos: es material extraído y verificado para el que no se escribió
+writeup en esta pasada. Queda listo para continuar.
+
+- **SSTI:** Velocity (cadena `$class.inspect("java.lang.Runtime")`), Smarty (escape de
+  modo seguro con `getStreamVariable` y `writeFile`, corregido en 3.1.24), Mako, y los
+  dos casos de estudio completos — Alfresco (backdoor FreeMarker + cadena de XSS
+  almacenado con CSRF) y XWiki Enterprise (Velocity auto-modificante).
+- **Caché:** Ghost/blog.cloudflare.com, HubSpot/goodhire.com, Pinterest, Taobao (método
+  unkeyed), Adobe/WP Rocket, DoS por redirección en Cloudflare, normalización `%3f` en
+  nginx/Mozilla, y `X-Original-URL` en Drupal/Symfony/Zend (**CVE-2018-14773**).
+- **Desync:** Cisco Web VPN (**CVE-2022-20713**), Verisign (chunk fragmentado), Pulse
+  Secure, AWS ALB.
+- **Timing:** descubrimiento de parámetros por cuartil inferior, inyección JSON ciega
+  (200 µs), contaminación de parámetros del lado servidor, y bypass de firewall por ruta
+  alternativa.
+- **Deserialización:** los dos objetos PHP serializados literales con sus métodos
+  mágicos, y la detección por firma `rO0` / `ac ed`.
